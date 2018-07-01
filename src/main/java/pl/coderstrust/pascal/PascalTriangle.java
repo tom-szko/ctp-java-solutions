@@ -3,46 +3,43 @@ package pl.coderstrust.pascal;
 public class PascalTriangle {
     public static void main(String[] args) {
         PascalTriangle pTriangle = new PascalTriangle();
-        pTriangle.drawPascalTri(10);
+
+        pTriangle.drawPascalTriangle(10);
         System.out.println();
-        pTriangle.drawPascalTri(6);
+
+        pTriangle.drawPascalTriangle(6);
         System.out.println();
-        pTriangle.drawPascalTri(4);
+
+        pTriangle.drawPascalTriangle(4);
     }
 
-    void drawPascalTri(int triRows) {
-        for (int row = 1; row <= triRows; row++) {
-            for (int col = 0; col<(triRows-row); col++) {
+    void drawPascalTriangle(int triangleRows) {
+        for (int row = 1; row <= triangleRows; row++) {
+            for (int column = 0; column < (triangleRows - row); column++) {
                 System.out.print("  ");
             }
 
-            int col = 1;
-            while (col <= row) {
-                System.out.printf("%4d", calcTriNumber(row-1, col-1));
-                col++;
+            int column = 1;
+            while (column <= row) {
+                System.out.printf("%4d", calcTriangleNumber(row - 1, column - 1));
+                column++;
             }
             System.out.println();
         }
     }
 
-    long calcTriNumber(int row, int col) {
-
-        return calcFactorial(row)/(calcFactorial(col)*(calcFactorial(row-col)));
-
+    long calcTriangleNumber(int row, int column) {
+        return calcFactorial(row) / (calcFactorial(column) * (calcFactorial(row - column)));
     }
 
     long calcFactorial(int number) {
-
         if (number == 0) {
             return 1;
-        }
-
-        else {
+        } else {
             long factorial = 1;
             for (int i = 1; i <= number; i++) {
                 factorial *= i;
             }
-
             return factorial;
         }
     }
