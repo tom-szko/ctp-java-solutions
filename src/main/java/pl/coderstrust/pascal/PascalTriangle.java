@@ -2,37 +2,34 @@ package pl.coderstrust.pascal;
 
 public class PascalTriangle {
     public static void main(String[] args) {
-        PascalTriangle pTriangle = new PascalTriangle();
-
-        pTriangle.drawPascalTriangle(10);
+        drawPascalTriangle(10);
         System.out.println();
 
-        pTriangle.drawPascalTriangle(6);
+        drawPascalTriangle(6);
         System.out.println();
 
-        pTriangle.drawPascalTriangle(4);
+        drawPascalTriangle(4);
     }
 
-    void drawPascalTriangle(int triangleRows) {
+    static void drawPascalTriangle(int triangleRows) {
         for (int row = 1; row <= triangleRows; row++) {
             for (int column = 0; column < (triangleRows - row); column++) {
                 System.out.print("  ");
             }
-
             int column = 1;
             while (column <= row) {
-                System.out.printf("%4d", calcTriangleNumber(row - 1, column - 1));
+                System.out.printf("%4d", calculateTriangleNumber(row - 1, column - 1));
                 column++;
             }
             System.out.println();
         }
     }
 
-    long calcTriangleNumber(int row, int column) {
-        return calcFactorial(row) / (calcFactorial(column) * (calcFactorial(row - column)));
+    static long calculateTriangleNumber(int row, int column) {
+        return calculateFactorial(row) / (calculateFactorial(column) * (calculateFactorial(row - column)));
     }
 
-    long calcFactorial(int number) {
+    static long calculateFactorial(int number) {
         if (number == 0) {
             return 1;
         } else {
