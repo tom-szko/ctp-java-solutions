@@ -1,7 +1,6 @@
 package pl.coderstrust.multiplication;
 
 public class MultiplicationTable {
-
     public static void main(String[] args) {
         printMultiplicationTable(3);
         System.out.println();
@@ -14,12 +13,10 @@ public class MultiplicationTable {
 
     static void printMultiplicationTable(int size) {
         System.out.printf(createTableCell(size), " ");
-
         for (int i = 1; i <= size; i++) {
             System.out.printf(createTableCell(size), i);
         }
         System.out.println();
-
         for (int i = 1; i <= size; i++) {
             System.out.printf(createTableCell(size), i);
             for (int k = 1; k <= size; k++) {
