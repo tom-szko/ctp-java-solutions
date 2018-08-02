@@ -12,11 +12,9 @@ public class SelectionSort {
     private static int[] sort(int[] array) {
         int[] sortedArray = Arrays.copyOf(array, array.length);
         for (int k = 0; k < sortedArray.length; k++) {
-            int temporaryValue = sortedArray[k];
             int currentMinPosition = k;
             for (int i = k + 1; i < sortedArray.length; i++) {
-                if (temporaryValue > sortedArray[i]) {
-                    temporaryValue = sortedArray[i];
+                if (sortedArray[k] > sortedArray[i]) {
                     currentMinPosition = i;
                 }
             }
