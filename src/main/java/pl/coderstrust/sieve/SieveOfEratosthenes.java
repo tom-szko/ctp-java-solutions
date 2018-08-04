@@ -19,8 +19,7 @@ public class SieveOfEratosthenes {
                 }
             }
         }
-        int[] primes = new int[countNonMarkerValues(numbers)];
-        return fillArrayWithNonMarkerValues(numbers, primes);
+        return filterPrimes(numbers);
     }
 
     private static void fillArrayWithValues(int[] array, int value) {
@@ -30,7 +29,7 @@ public class SieveOfEratosthenes {
         }
     }
 
-    private static int countNonMarkerValues(int[] array) {
+    private static int countPrimes(int[] array) {
         int numberOfPrimes = 0;
         for (int number : array) {
             if (number != MARKER_VALUE) {
@@ -40,14 +39,15 @@ public class SieveOfEratosthenes {
         return numberOfPrimes;
     }
 
-    private static int[] fillArrayWithNonMarkerValues(int[] arrayWithZeroes, int[] arrayWithoutZeroes) {
+    private static int[] filterPrimes(int[] input) {
         int count = 0;
-        for (int number : arrayWithZeroes) {
+        int [] primes = new int[countPrimes(input)];
+        for (int number : input) {
             if (number != MARKER_VALUE) {
-                arrayWithoutZeroes[count] = number;
+                primes[count] = number;
                 count++;
             }
         }
-        return arrayWithoutZeroes;
+        return primes;
     }
 }
