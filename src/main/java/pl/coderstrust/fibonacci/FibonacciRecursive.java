@@ -2,19 +2,19 @@ package pl.coderstrust.fibonacci;
 
 public class FibonacciRecursive {
     public static void main(String[] args) {
-        int fibonacciNumberInOrder = 10;
-        if (fibonacci(fibonacciNumberInOrder) < 0) {
-            System.out.println("Invalid input");
-        } else {
+        int fibonacciNumberInOrder = 7;
+        try {
             System.out.println(fibonacci(fibonacciNumberInOrder));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid input.");
         }
     }
 
-    private static long fibonacci(int fibonacciNumberInOrder) {
+    private static long fibonacci(int fibonacciNumberInOrder) throws IllegalArgumentException {
         if (fibonacciNumberInOrder <= 0) {
-            return -1;
+            throw new IllegalArgumentException("Invalid input.");
         }
-        if (fibonacciNumberInOrder == 1 || fibonacciNumberInOrder == 2) {
+        if (fibonacciNumberInOrder <= 2) {
             return 1;
         }
         return fibonacci(fibonacciNumberInOrder - 1)

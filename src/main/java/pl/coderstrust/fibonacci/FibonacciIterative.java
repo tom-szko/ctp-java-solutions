@@ -3,30 +3,24 @@ package pl.coderstrust.fibonacci;
 public class FibonacciIterative {
     public static void main(String[] args) {
         int fibonacciNumberInOrder = 7;
-        if (fibonacci(fibonacciNumberInOrder) < 0) {
-            System.out.println("Invalid input");
-        }  else {
+        try {
             System.out.println(fibonacci(fibonacciNumberInOrder));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid input.");
         }
     }
 
-    private static long fibonacci(int fibonacciNumberInOrder) {
+    private static long fibonacci(int fibonacciNumberInOrder) throws IllegalArgumentException {
         if (fibonacciNumberInOrder <= 0) {
-            return -1;
+            throw new IllegalArgumentException("Invalid input.");
         }
-        if (fibonacciNumberInOrder == 1 || fibonacciNumberInOrder == 2) {
-            return 1;
+        int fibonacciNumberMinusOne = 1;
+        int fibonacciNumber = 1;
+        for (int i = 2; i < fibonacciNumberInOrder; i++) {
+            int temp = fibonacciNumber;
+            fibonacciNumber += fibonacciNumberMinusOne;
+            fibonacciNumberMinusOne = temp;
         }
-        int a = 1;
-        int b = 1;
-        int temp;
-        int count = 0;
-        while (count < fibonacciNumberInOrder - 2) {
-            temp = b;
-            b = b + a;
-            a = temp;
-            count++;
-        }
-        return b;
+        return fibonacciNumber;
     }
 }
