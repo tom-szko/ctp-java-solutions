@@ -10,14 +10,13 @@ public class FibonacciRecursive {
         }
     }
 
-    private static long fibonacci(int fibonacciNumberInOrder) throws IllegalArgumentException {
+    private static long fibonacci(int fibonacciNumberInOrder) {
         if (fibonacciNumberInOrder <= 0) {
             throw new IllegalArgumentException("Invalid input.");
         }
         if (fibonacciNumberInOrder <= 2) {
             return 1;
         }
-        return fibonacci(fibonacciNumberInOrder - 1)
-                + fibonacci(fibonacciNumberInOrder - 2);
+        return fibonacci(fibonacciNumberInOrder - 1) + fibonacci(fibonacciNumberInOrder - 2);
     }
 }

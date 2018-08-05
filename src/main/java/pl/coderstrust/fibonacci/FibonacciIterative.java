@@ -10,16 +10,16 @@ public class FibonacciIterative {
         }
     }
 
-    private static long fibonacci(int fibonacciNumberInOrder) throws IllegalArgumentException {
+    private static long fibonacci(int fibonacciNumberInOrder) {
         if (fibonacciNumberInOrder <= 0) {
             throw new IllegalArgumentException("Invalid input.");
         }
-        int fibonacciNumberMinusOne = 1;
+        int previousFibonacciNumber = 1;
         int fibonacciNumber = 1;
         for (int i = 2; i < fibonacciNumberInOrder; i++) {
             int temp = fibonacciNumber;
-            fibonacciNumber += fibonacciNumberMinusOne;
-            fibonacciNumberMinusOne = temp;
+            fibonacciNumber += previousFibonacciNumber;
+            previousFibonacciNumber = temp;
         }
         return fibonacciNumber;
     }
