@@ -6,7 +6,7 @@ public class FibonacciRecursive {
         try {
             System.out.println(fibonacci(fibonacciNumberInOrder));
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid input.");
+            System.out.println(e.getMessage());
         }
     }
 
