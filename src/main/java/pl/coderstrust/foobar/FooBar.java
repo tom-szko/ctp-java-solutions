@@ -7,24 +7,23 @@ public class FooBar {
         }
     }
 
-    public static String[] makeFooBarTable(int number) {
-        if (number < 0) {
+    public static String[] makeFooBarTable(int size) {
+        if (size < 0) {
             throw new IllegalArgumentException("Negative array size argument. Array cannot be created.");
-        } else {
-            StringBuilder line = new StringBuilder();
-            String[] fooBarTable = new String[number];
-            for (int i = 0, j = 1; i < number; i++, j++) {
-                line.append(j).append(" ");
-                if (j % 3 == 0) {
-                    line.append("Foo");
-                }
-                if (j % 5 == 0) {
-                    line.append("Bar");
-                }
-                fooBarTable[i] = line.toString();
-                line.delete(0, line.length());
-            }
-            return fooBarTable;
         }
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] fooBarTable = new String[size];
+        for (int i = 0, j = 1; i < size; i++, j++) {
+            stringBuilder.append(j).append(" ");
+            if (j % 3 == 0) {
+                stringBuilder.append("Foo");
+            }
+            if (j % 5 == 0) {
+                stringBuilder.append("Bar");
+            }
+            fooBarTable[i] = stringBuilder.toString();
+            stringBuilder.delete(0, stringBuilder.length());
+        }
+        return fooBarTable;
     }
 }

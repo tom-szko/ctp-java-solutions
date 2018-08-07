@@ -12,9 +12,9 @@ public class FooBarTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void should_ReturnTableOf100Items_When_NumberIs100() {
+    public void testArrayOfSizeOneHundred() {
         //given
-        int number = 100;
+        int tableSize = 100;
         String[] expected = {"1 ", "2 ", "3 Foo", "4 ", "5 Bar", "6 Foo", "7 ", "8 ", "9 Foo", "10 Bar", "11 ",
                 "12 Foo", "13 ", "14 ", "15 FooBar", "16 ", "17 ", "18 Foo", "19 ", "20 Bar", "21 Foo", "22 ",
                 "23 ", "24 Foo", "25 Bar", "26 ", "27 Foo", "28 ", "29 ", "30 FooBar", "31 ", "32 ", "33 Foo",
@@ -27,30 +27,30 @@ public class FooBarTest {
                 "100 Bar"};
 
         //when
-        String[] actual = FooBar.makeFooBarTable(number);
+        String[] actual = FooBar.makeFooBarTable(tableSize);
 
         //then
         assertArrayEquals(actual, expected);
     }
 
     @Test
-    public void should_ReturnEmptyTable_When_NumberIs0() {
+    public void testArrayOfSizeZero() {
         //given
-        int number = 0;
+        int tableSize = 0;
         String[] expected = {};
 
         //when
-        String[] actual = FooBar.makeFooBarTable(number);
+        String[] actual = FooBar.makeFooBarTable(tableSize);
 
         //then
         assertArrayEquals(actual, expected);
     }
 
     @Test
-    public void should_ThrowException_When_NumberLessThan0() throws IllegalArgumentException {
-        int number = -1;
+    public void testNegativeSizeOfArray() throws IllegalArgumentException {
+        int tableSize = -1;
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Negative array size argument. Array cannot be created.");
-        FooBar.makeFooBarTable(number);
+        FooBar.makeFooBarTable(tableSize);
     }
 }
