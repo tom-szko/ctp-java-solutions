@@ -1,16 +1,18 @@
 package pl.coderstrust.foobar;
 
-import junitparams.JUnitParamsRunner;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.*;
 
-@RunWith(JUnitParamsRunner.class)
 public class FooBarTest {
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Test
-    public void shouldReturnTabeOfFooBarFrom1To25WhenArgumentOf50Provided() {
+    public void should_ReturnTableOf100Items_When_NumberIs100() {
         //given
         int number = 100;
         String[] expected = {"1 ", "2 ", "3 Foo", "4 ", "5 Bar", "6 Foo", "7 ", "8 ", "9 Foo", "10 Bar", "11 ",
@@ -23,43 +25,32 @@ public class FooBarTest {
                 "78 Foo", "79 ", "80 Bar", "81 Foo", "82 ", "83 ", "84 Foo", "85 Bar", "86 ", "87 Foo", "88 ",
                 "89 ", "90 FooBar", "91 ", "92 ", "93 Foo", "94 ", "95 Bar", "96 Foo", "97 ", "98 ", "99 Foo",
                 "100 Bar"};
-        String[] actual;
 
         //when
-        actual = FooBar.makeFooBarTable(number);
+        String[] actual = FooBar.makeFooBarTable(number);
 
         //then
         assertArrayEquals(actual, expected);
     }
 
     @Test
-    public void shouldReturnEmptyTableOfFooBarWhen0ArgumentProvided() {
+    public void should_ReturnEmptyTable_When_NumberIs0() {
         //given
         int number = 0;
         String[] expected = {};
-        String[] actual;
 
         //when
-        actual = FooBar.makeFooBarTable(number);
+        String[] actual = FooBar.makeFooBarTable(number);
 
         //then
         assertArrayEquals(actual, expected);
     }
 
     @Test
-    public void shouldReturnNegativeArraySizeExceptionWhenNegativeNumberProvided() {
-        //given
+    public void should_ThrowException_When_NumberLessThan0() throws IllegalArgumentException {
         int number = -1;
-        boolean isThrown = false;
-
-        //when
-        try {
-            FooBar.makeFooBarTable(number);
-        } catch (NegativeArraySizeException e) {
-            isThrown = true;
-        }
-
-        //then
-        assertTrue(isThrown);
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Negative array size argument. Array cannot be created.");
+        FooBar.makeFooBarTable(number);
     }
 }
