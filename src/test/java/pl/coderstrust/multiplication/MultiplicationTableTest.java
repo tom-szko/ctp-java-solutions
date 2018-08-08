@@ -54,7 +54,7 @@ public class MultiplicationTableTest {
     }
 
     @Test
-    public void testSizeOfLessThanOne() throws IllegalArgumentException {
+    public void testForSizeOfLessThanOne() throws IllegalArgumentException {
         int size = -1;
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Table size argument cannot be less than 0.");
