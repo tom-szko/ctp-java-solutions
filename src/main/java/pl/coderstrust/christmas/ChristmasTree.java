@@ -1,35 +1,41 @@
 package pl.coderstrust.christmas;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChristmasTree {
     public static void main(String[] args) {
-        printChristmasTree(5);
-        System.out.println();
-
-        printChristmasTree(10);
-        System.out.println();
-
-        printChristmasTree(16);
-    }
-
-    static void printChristmasTree(int size) {
-        int row = 1;
-        while (row <= size) {
-            for (int i = 0; i < size - row; i++) {
-                System.out.print(" ");
-            }
-            for (int s = 1; s <= row * 2 - 1; s++) {
-                System.out.print("*");
-            }
-            System.out.println();
-            row++;
+        List<String> tree = getChristmasTree(6);
+        for (String line : tree) {
+            System.out.println(line);
         }
-        printTreeTrunk(size);
     }
 
-    static void printTreeTrunk(int size) {
+    public static List<String> getChristmasTree(int size) {
+        List<String> result = new ArrayList<String>();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int row = 1; row <= size; row++) {
+            stringBuilder.delete(0, stringBuilder.length());
+                for (int i = 0; i < size - row; i++) {
+                    stringBuilder.append(" ");
+                }
+                for (int s = 1; s <= row * 2 - 1; s++) {
+                    stringBuilder.append("*");
+                }
+                result.add(stringBuilder.toString());
+        }
+        if (size > 0) {
+            result.add(makeTreeTrunk(size));
+        }
+        return result;
+    }
+
+    private static String makeTreeTrunk(int size) {
+        StringBuilder trunkBuilder = new StringBuilder();
         for (int i = 0; i < size - 2; i++) {
-            System.out.print(" ");
+            trunkBuilder.append(" ");
         }
-        System.out.print("**");
+        return trunkBuilder.append("**").toString();
     }
 }
