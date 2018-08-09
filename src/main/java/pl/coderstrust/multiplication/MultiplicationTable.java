@@ -5,13 +5,13 @@ import java.util.List;
 
 public class MultiplicationTable {
     public static void main(String[] args) {
-        List<String> table = generateMultiplicationTable(1);
+        List<String> table = getMultiplicationTable(6);
         for (String line : table) {
             System.out.println(line);
         }
     }
 
-    public static List<String> generateMultiplicationTable(int size) {
+    public static List<String> getMultiplicationTable(int size) {
         List<String> result = new ArrayList<>();
         if (size <= 0) {
             throw new IllegalArgumentException("Table size argument cannot be less than 0.");

@@ -30,10 +30,10 @@ public class MultiplicationTableTest {
                 );
 
         //when
-        List<String> actual = MultiplicationTable.generateMultiplicationTable(size);
+        List<String> actual = MultiplicationTable.getMultiplicationTable(size);
 
         //then
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -47,10 +47,10 @@ public class MultiplicationTableTest {
                 );
 
         //when
-        List<String> actual = MultiplicationTable.generateMultiplicationTable(size);
+        List<String> actual = MultiplicationTable.getMultiplicationTable(size);
 
         //then
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -58,6 +58,6 @@ public class MultiplicationTableTest {
         int size = -1;
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Table size argument cannot be less than 0.");
-        MultiplicationTable.generateMultiplicationTable(size);
+        MultiplicationTable.getMultiplicationTable(size);
     }
 }
