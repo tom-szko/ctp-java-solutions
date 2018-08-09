@@ -1,38 +1,42 @@
 package pl.coderstrust.multiplication;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MultiplicationTable {
     public static void main(String[] args) {
-        printMultiplicationTable(3);
-        System.out.println();
-
-        printMultiplicationTable(5);
-        System.out.println();
-
-        printMultiplicationTable(12);
+        List<String> table = getMultiplicationTable(6);
+        for (String line : table) {
+            System.out.println(line);
+        }
     }
 
-    static void printMultiplicationTable(int size) {
-        System.out.printf(createTableCell(size), " ");
-        for (int i = 1; i <= size; i++) {
-            System.out.printf(createTableCell(size), i);
+    public static List<String> getMultiplicationTable(int size) {
+        List<String> result = new ArrayList<>();
+        if (size <= 0) {
+            throw new IllegalArgumentException("Table size argument cannot be less than 0.");
         }
-        System.out.println();
+        StringBuilder stringBuilder = new StringBuilder(String.format(createTableCell(size), " "));
         for (int i = 1; i <= size; i++) {
-            System.out.printf(createTableCell(size), i);
+            stringBuilder.append(String.format(createTableCell(size), i));
+        }
+        result.add(stringBuilder.toString());
+        for (int i = 1; i <= size; i++) {
+            stringBuilder.delete(0, stringBuilder.length()).append(String.format(createTableCell(size), i));
             for (int k = 1; k <= size; k++) {
-                int s = i * k;
-                System.out.printf(createTableCell(size), s);
+                stringBuilder.append(String.format(createTableCell(size), i * k));
             }
-            System.out.println();
+            result.add(stringBuilder.toString());
         }
+        return result;
     }
 
-    static String createTableCell(int size) {
+    private static String createTableCell(int size) {
+        StringBuilder whiteSpaceBuilder = new StringBuilder();
         int longestNumber = String.valueOf(size * size).length();
-        String whiteSpace = "";
         for (int i = 1; i <= longestNumber; i++) {
-            whiteSpace += " ";
+            whiteSpaceBuilder.append(" ");
         }
-        return whiteSpace + "%" + longestNumber + "s";
+        return whiteSpaceBuilder.append("%").append(longestNumber).append("s").toString();
     }
 }
