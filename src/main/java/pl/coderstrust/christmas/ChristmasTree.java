@@ -26,12 +26,12 @@ public class ChristmasTree {
                 result.add(stringBuilder.toString());
         }
         if (size > 0) {
-            result.add(makeTreeTrunk(size));
+            result.add(getTreeTrunk(size));
         }
         return result;
     }
 
-    private static String makeTreeTrunk(int size) {
+    private static String getTreeTrunk(int size) {
         StringBuilder trunkBuilder = new StringBuilder();
         for (int i = 0; i < size - 2; i++) {
             trunkBuilder.append(" ");
