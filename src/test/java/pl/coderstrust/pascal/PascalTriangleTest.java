@@ -1,32 +1,21 @@
 package pl.coderstrust.pascal;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-import static pl.coderstrust.pascal.PascalTriangle.*;
+import static org.junit.Assert.assertThat;
+import static pl.coderstrust.pascal.PascalTriangle.getPascalTriangle;
 
-
-@RunWith(JUnitParamsRunner.class)
 public class PascalTriangleTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-
-    @Test
-    @Parameters({"0|1", "1|1", "2|2", "3|6", "4|24", "5|120", "6|720", "7|5040"})
-    public void testFactorial(int number, long expected) {
-        assertThat(getFactorial(number), is(equalTo(expected)));
-    }
 
     @Test
     public void testForFiveRows() {
@@ -62,7 +51,7 @@ public class PascalTriangleTest {
     }
 
     @Test
-    public void testForNegativeNumbers() throws IllegalArgumentException {
+    public void testForNegativeNumberOfRows() throws IllegalArgumentException {
         int triangleRows = -1;
         exception.expect(IllegalArgumentException.class);
         getPascalTriangle(triangleRows);

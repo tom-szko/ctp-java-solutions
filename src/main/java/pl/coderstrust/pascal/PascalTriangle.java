@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PascalTriangle {
     public static void main(String[] args) {
-        List<String> triangle = getPascalTriangle(2);
+        List<String> triangle = getPascalTriangle(10);
         for (String row : triangle) {
             System.out.println(row);
         }
@@ -18,7 +18,6 @@ public class PascalTriangle {
         List<String> result = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
         for (int row = 1; row <= triangleRows; row++) {
-            stringBuilder.delete(0, stringBuilder.length());
             for (int column = 0; column < (triangleRows - row); column++) {
                 stringBuilder.append("  ");
             }
@@ -26,15 +25,16 @@ public class PascalTriangle {
                 stringBuilder.append(String.format("%4d", getPascalNumber(row - 1, column - 1)));
             }
             result.add(stringBuilder.toString());
+            stringBuilder.delete(0, stringBuilder.length());
         }
         return result;
     }
 
     private static long getPascalNumber(int row, int column) {
-        return getFactorial(row) / (getFactorial(column) * (getFactorial(row - column)));
+        return calculateFactorial(row) / (calculateFactorial(column) * (calculateFactorial(row - column)));
     }
 
-    public static long getFactorial(int number) {
+    private static long calculateFactorial(int number) {
         if (number == 0) {
             return 1;
         } else {
