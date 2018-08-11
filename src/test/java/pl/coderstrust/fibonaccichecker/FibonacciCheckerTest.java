@@ -39,7 +39,7 @@ public class FibonacciCheckerTest {
     }
 
     @Test
-    @Parameters({"0, false"})
+    @Parameters({"3, true", "3, true", "3, true", "10, false", "10, false", "10, false"})
     public void testForDuplicates(long number, boolean isFibonacci) {
         assertThat(fibonacciChecker.isFibonacciNumber(number), is(isFibonacci));
     }
