@@ -23,7 +23,7 @@ public class MergeSort implements SortingMethod {
                 result[resultIndex] = array1[index1];
                 index1++;
                 resultIndex++;
-            } else if (array1[index1] > array2[index2]) {
+            } else {
                 result[resultIndex] = array2[index2];
                 index2++;
                 resultIndex++;
@@ -44,8 +44,10 @@ public class MergeSort implements SortingMethod {
 
     private int[][] divide(int[] array) {
         int[][] result = new int[2][];
-        result[0] = new int[array.length / 2];
-        result[1] = new int[array.length - array.length / 2];
+        int firstPartSize = array.length / 2;
+        int secondPartSize = array.length - firstPartSize;
+        result[0] = new int[firstPartSize];
+        result[1] = new int[secondPartSize];
         for (int i = 0; i < array.length; i++) {
             if (i < array.length / 2) {
                 result[0][i] = array[i];
