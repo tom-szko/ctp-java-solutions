@@ -9,15 +9,17 @@ public class BubbleSort implements SortingMethod {
             throw new NullPointerException("Array cannot be null.");
         }
         int[] sortedArray = Arrays.copyOf(array, array.length);
-        boolean sorted = true;
-        while (sorted) {
-            sorted = false;
-            for (int i = 1; i < sortedArray.length; i++) {
+        boolean sorted = false;
+        int subarrayToCheck = sortedArray.length;
+        while (!sorted) {
+            sorted = true;
+            for (int i = 1; i < subarrayToCheck; i++) {
                 if (sortedArray[i - 1] > sortedArray[i]) {
                     swapArrayElements(sortedArray, i - 1, i);
-                    sorted = true;
+                    sorted = false;
                 }
             }
+            subarrayToCheck--;
         }
         return sortedArray;
     }
