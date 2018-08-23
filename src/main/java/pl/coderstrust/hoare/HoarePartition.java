@@ -8,10 +8,16 @@ public class HoarePartition {
             throw new NullPointerException("Array cannot be null.");
         }
         if (array.length < 1) {
-            throw new IllegalArgumentException("Array cannot have length of 0.");
+            throw new IllegalArgumentException("Array cannot be empty.");
         }
-        if (pivotIndex >= array.length || pivotIndex < 0) {
-            throw new IllegalArgumentException("Pivot index cannot be greater than/equal to array.length or smaller than zero.");
+        if (pivotIndex > array.length) {
+            throw new IllegalArgumentException("Pivot index cannot be cannot be greater than max index of the array.");
+        }
+        if (pivotIndex == array.length) {
+            throw new IllegalArgumentException("Pivot index cannot be equal to max index of the array.");
+        }
+        if (pivotIndex < 0) {
+            throw new IllegalArgumentException("Pivot index cannot be less than zero.");
         }
         int[] partitioned = Arrays.copyOf(array, array.length);
         int pivot = partitioned[pivotIndex];
