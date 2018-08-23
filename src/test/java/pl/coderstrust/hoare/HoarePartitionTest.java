@@ -17,7 +17,7 @@ public class HoarePartitionTest {
         int pivotIndex = 0;
         int[] input = new int[0];
         exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Array cannot be null or has length of 0.");
+        exception.expectMessage("Array cannot have length of 0.");
         hoare.partition(input, pivotIndex);
     }
 
@@ -26,8 +26,8 @@ public class HoarePartitionTest {
         HoarePartition hoare = new HoarePartition();
         int pivotIndex = 0;
         int[] input = null;
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Array cannot be null or has length of 0.");
+        exception.expect(NullPointerException.class);
+        exception.expectMessage("Array cannot be null.");
         hoare.partition(input, pivotIndex);
     }
 
@@ -37,7 +37,7 @@ public class HoarePartitionTest {
         int pivotIndex = 10;
         int[] input = {1, 2, 3, 4};
         exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Pivot index cannot be >= array.length and < 0");
+        exception.expectMessage("Pivot index cannot be greater than/equal to array.length or smaller than zero.");
         hoare.partition(input, pivotIndex);
     }
 
