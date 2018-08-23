@@ -1,15 +1,13 @@
-package pl.coderstrust.sort;
+package pl.coderstrust.sortcomparison;
 
 import java.util.Arrays;
 
-public class SelectionSort {
-    public static void main(String[] args) {
-        int[] myArray = {Integer.MAX_VALUE, 39, 0, 0, 890, -12, 890, 12390, 111, Integer.MIN_VALUE};
-        System.out.println("myArray = " + Arrays.toString(myArray));
-        System.out.println("myArray in ascending order = " + Arrays.toString(sort(myArray)));
-    }
-
-    private static int[] sort(int[] array) {
+public class SelectionSort implements SortingMethod {
+    @Override
+    public int[] sort(int[] array) {
+        if (array == null) {
+            throw new NullPointerException("Array cannot be null.");
+        }
         int[] sortedArray = Arrays.copyOf(array, array.length);
         for (int k = 0; k < sortedArray.length; k++) {
             int currentMinPosition = k;
@@ -25,7 +23,7 @@ public class SelectionSort {
         return sortedArray;
     }
 
-    private static void swapArrayElements(int[] array, int firstElementPosition, int secondElementPosition) {
+    private void swapArrayElements(int[] array, int firstElementPosition, int secondElementPosition) {
         int temporaryValue = array[firstElementPosition];
         array[firstElementPosition] = array[secondElementPosition];
         array[secondElementPosition] = temporaryValue;
