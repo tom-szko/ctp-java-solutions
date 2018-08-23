@@ -48,12 +48,11 @@ public class MergeSort implements SortingMethod {
         int secondPartSize = array.length - firstPartSize;
         result[0] = new int[firstPartSize];
         result[1] = new int[secondPartSize];
-        for (int i = 0; i < array.length; i++) {
-            if (i < array.length / 2) {
-                result[0][i] = array[i];
-            } else {
-                result[1][i - array.length / 2] = array[i];
-            }
+        for (int i = 0; i < firstPartSize; i++) {
+            result[0][i] = array[i];
+        }
+        for (int i = firstPartSize; i < firstPartSize + secondPartSize; i++) {
+            result[1][i - firstPartSize] = array[i];
         }
         return result;
     }
