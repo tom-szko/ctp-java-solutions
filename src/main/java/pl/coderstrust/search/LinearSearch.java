@@ -1,7 +1,7 @@
 package pl.coderstrust.search;
 
-public class LinearSearch implements Searchable {
-    public int search(int[] array, int element){
+public class LinearSearch implements SearchMethod {
+    public int search(int[] array, int number){
         if (array == null) {
             throw new NullPointerException("Array cannot be null.");
         }
@@ -9,7 +9,7 @@ public class LinearSearch implements Searchable {
             throw new IllegalArgumentException("Array cannot be empty.");
         }
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == element) {
+            if (array[i] == number) {
                 return i;
             }
         }

@@ -2,7 +2,7 @@ package pl.coderstrust.search;
 
 public class BinarySearchTest extends SearchTestBase{
     @Override
-    public Searchable getSearchMethod() {
+    public SearchMethod getSearchMethod() {
         return new BinarySearch();
     }
 }

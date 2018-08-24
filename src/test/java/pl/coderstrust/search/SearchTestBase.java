@@ -1,16 +1,12 @@
 package pl.coderstrust.search;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class SearchTestBase {
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
 
-    public abstract Searchable getSearchMethod();
+    public abstract SearchMethod getSearchMethod();
 
     @Test
     public void testHugeArray() {
@@ -60,21 +56,22 @@ public abstract class SearchTestBase {
         assertEquals(expected, actual);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testEmptyArray() throws IllegalArgumentException {
+        //given
         int element = 1;
         int[] testArray = new int[0];
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Array cannot be empty.");
+
+        //when
         getSearchMethod().search(testArray, element);
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testNull() throws NullPointerException {
+        //given
         int element = 0;
-        int[] testArray = null;
-        exception.expect(NullPointerException.class);
-        exception.expectMessage("Array cannot be null.");
-        getSearchMethod().search(testArray, element);
+
+        //when
+        getSearchMethod().search(null, element);
     }
 }

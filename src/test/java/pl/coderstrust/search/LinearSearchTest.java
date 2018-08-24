@@ -2,7 +2,7 @@ package pl.coderstrust.search;
 
 public class LinearSearchTest extends SearchTestBase {
     @Override
-    public Searchable getSearchMethod() {
+    public SearchMethod getSearchMethod() {
         return new LinearSearch();
     }
 }

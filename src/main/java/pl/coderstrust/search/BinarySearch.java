@@ -1,7 +1,7 @@
 package pl.coderstrust.search;
 
-public class BinarySearch implements Searchable {
-    public int search(int[] array, int element) {
+public class BinarySearch implements SearchMethod {
+    public int search(int[] array, int number) {
         if (array == null) {
             throw new NullPointerException("Array cannot be null.");
         }
@@ -12,9 +12,9 @@ public class BinarySearch implements Searchable {
         int hiIndex = array.length - 1;
         while (loIndex <= hiIndex) {
             int centralElement = loIndex + (hiIndex - loIndex) / 2;
-            if (element > array[centralElement]) {
+            if (number > array[centralElement]) {
                 loIndex = centralElement + 1;
-            } else if (element < array[centralElement]) {
+            } else if (number < array[centralElement]) {
                 hiIndex = centralElement - 1;
             } else {
                 return centralElement;
