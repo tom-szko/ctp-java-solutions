@@ -3,10 +3,12 @@ package pl.coderstrust.figures;
 public class Circle implements Figure {
     private double radius;
 
-    Circle(double radius){
-        if (radius < 0) {
-            throw new IllegalArgumentException("Radius cannot have negative value.");
-        }
+    Circle() {
+        this.radius = 0;
+    }
+
+    Circle(double radius) {
+        validateRadius(radius);
         this.radius = radius;
     }
 
@@ -20,6 +22,16 @@ public class Circle implements Figure {
     }
 
     public void setRadius(double radius) {
+        validateRadius(radius);
         this.radius = radius;
+    }
+
+    private void validateRadius(double radius) {
+        if (radius <= 0) {
+            throw new IllegalArgumentException("Radius cannot be equal to 0 or less than 0.");
+        }
+        if (radius > Double.MAX_VALUE) {
+            throw new IllegalArgumentException("Radius cannot be greater than max double value (" + Double.MAX_VALUE + ").");
+        }
     }
 }

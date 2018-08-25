@@ -3,7 +3,6 @@ package pl.coderstrust.figures;
 public class AreaCalculator {
     public static void main(String[] args) {
         Square square = new Square(6);
-        square.setHeight(10);
         double squareArea = square.calculateArea();
         System.out.println("Square side: " + square.getHeight() + ". Square area: " + squareArea);
         Rectangle rectangle = new Rectangle(6, 10);

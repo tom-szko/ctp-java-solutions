@@ -3,16 +3,16 @@ package pl.coderstrust.figures;
 public class Trapezoid implements Figure {
     private double baseOne, baseTwo, height;
 
+    Trapezoid() {
+        this.baseOne = 0;
+        this.baseTwo = 0;
+        this.height = 0;
+    }
+
     Trapezoid(double baseOne, double baseTwo, double height) {
-        if (baseOne < 0) {
-            throw new IllegalArgumentException("Base cannot take negative value.");
-        }
-        if (baseTwo < 0) {
-            throw new IllegalArgumentException("Base cannot take negative value.");
-        }
-        if (height < 0) {
-            throw new IllegalArgumentException("Height cannot take negative value.");
-        }
+        validateBase(baseOne);
+        validateBase(baseTwo);
+        validateHeight(height);
         this.baseOne = baseOne;
         this.baseTwo = baseTwo;
         this.height = height;
@@ -28,6 +28,7 @@ public class Trapezoid implements Figure {
     }
 
     public void setBaseOne(double baseOne) {
+        validateBase(baseOne);
         this.baseOne = baseOne;
     }
 
@@ -36,6 +37,7 @@ public class Trapezoid implements Figure {
     }
 
     public void setBaseTwo(double baseTwo) {
+        validateBase(baseTwo);
         this.baseTwo = baseTwo;
     }
 
@@ -44,6 +46,25 @@ public class Trapezoid implements Figure {
     }
 
     public void setHeight(double height) {
+        validateHeight(height);
         this.height = height;
+    }
+
+    private void validateHeight(double height) {
+        if (height <= 0) {
+            throw new IllegalArgumentException("Height cannot be equal to 0 or less than 0.");
+        }
+        if (height > Double.MAX_VALUE) {
+            throw new IllegalArgumentException("Height cannot be greater than max double value (" + Double.MAX_VALUE + ").");
+        }
+    }
+
+    private void validateBase(double base) {
+        if (base <= 0) {
+            throw new IllegalArgumentException("Base cannot be equal to 0 or less than 0.");
+        }
+        if (base > Double.MAX_VALUE) {
+            throw new IllegalArgumentException("Base cannot be greater than max double value (" + Double.MAX_VALUE + ").");
+        }
     }
 }
