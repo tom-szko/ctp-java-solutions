@@ -30,6 +30,7 @@ public class HoarePartitionTest {
         int[] input = new int[0];
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Array cannot be empty.");
+
         //when
         hoare.partition(input, pivotIndex);
     }
@@ -41,6 +42,7 @@ public class HoarePartitionTest {
         int[] input = null;
         exception.expect(NullPointerException.class);
         exception.expectMessage("Array cannot be null.");
+
         //when
         hoare.partition(input, pivotIndex);
     }
@@ -52,6 +54,7 @@ public class HoarePartitionTest {
         //given
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage(message);
+
         //when
         hoare.partition(array, pivotIndex);
     }
@@ -59,8 +62,8 @@ public class HoarePartitionTest {
     private Object[] pivotValues() {
         return new Object[]{
                 new Object[]{-5, new int[]{1, 2, 3, 4}, "Pivot index cannot be less than zero."},
-                new Object[]{17, new int[]{1, 2, 3, 4, 5, 6}, "Pivot index cannot be cannot be greater than max index of the array."},
-                new Object[]{4, new int[]{1, 2, 3, 4}, "Pivot index cannot be equal to max index of the array."},
+                new Object[]{17, new int[]{1, 2, 3, 4, 5, 6}, "Pivot index must be less than array size."},
+                new Object[]{4, new int[]{1, 2, 3, 4}, "Pivot index must be less than array size."},
         };
     }
 

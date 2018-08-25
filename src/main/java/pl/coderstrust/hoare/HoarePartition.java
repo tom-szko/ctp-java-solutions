@@ -10,11 +10,8 @@ public class HoarePartition {
         if (array.length < 1) {
             throw new IllegalArgumentException("Array cannot be empty.");
         }
-        if (pivotIndex > array.length) {
-            throw new IllegalArgumentException("Pivot index cannot be cannot be greater than max index of the array.");
-        }
-        if (pivotIndex == array.length) {
-            throw new IllegalArgumentException("Pivot index cannot be equal to max index of the array.");
+        if (pivotIndex >= array.length) {
+            throw new IllegalArgumentException("Pivot index must be less than array size.");
         }
         if (pivotIndex < 0) {
             throw new IllegalArgumentException("Pivot index cannot be less than zero.");
