@@ -26,7 +26,7 @@ public class Circle implements Figure {
         this.radius = radius;
     }
 
-    private void validateRadius(double radius) {
+    private static void validateRadius(double radius) {
         if (radius <= 0) {
             throw new IllegalArgumentException("Radius cannot be equal to 0 or less than 0.");
         }

@@ -38,7 +38,7 @@ public class Rectangle implements Figure {
         this.height = height;
     }
 
-    private void validateHeight(double height) {
+    private static void validateHeight(double height) {
         if (height <= 0) {
             throw new IllegalArgumentException("Height cannot be equal to 0 or less than 0.");
         }
@@ -47,7 +47,7 @@ public class Rectangle implements Figure {
         }
     }
 
-    private void validateWidth(double width) {
+    private static void validateWidth(double width) {
         if (width <= 0) {
             throw new IllegalArgumentException("Width cannot be equal to 0 or less than 0.");
         }

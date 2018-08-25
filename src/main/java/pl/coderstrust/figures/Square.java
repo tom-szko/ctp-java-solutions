@@ -21,7 +21,7 @@ public class Square extends Rectangle {
         throw new UnsupportedOperationException("This method is not supported. Use setWidth parameter to change rectangle size.");
     }
 
-    private void validateSide(double side) {
+    private static void validateSide(double side) {
         if (side <= 0) {
             throw new IllegalArgumentException("Side cannot be equal to 0 or less than 0.");
         }

@@ -38,7 +38,7 @@ public class Triangle implements Figure {
         this.height = height;
     }
 
-    private void validateHeight(double height) {
+    private static void validateHeight(double height) {
         if (height <= 0) {
             throw new IllegalArgumentException("Height cannot be equal to 0 or less than 0.");
         }
@@ -47,7 +47,7 @@ public class Triangle implements Figure {
         }
     }
 
-    private void validateBase(double base) {
+    private static void validateBase(double base) {
         if (base <= 0) {
             throw new IllegalArgumentException("Base cannot be equal to 0 or less than 0.");
         }
