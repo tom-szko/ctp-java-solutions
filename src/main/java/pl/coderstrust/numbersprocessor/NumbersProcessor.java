@@ -1,11 +1,11 @@
-package pl.coderstrust.processor;
+package pl.coderstrust.numbersprocessor;
 
 import java.util.Scanner;
 
 public class NumbersProcessor {
 
     public String processLine(String line) {
-        if (!checkLineValidity(line)) {
+        if (!hasOnlyAlphabetChars(line)) {
             return "";
         }
         int result = 0;
@@ -19,16 +19,17 @@ public class NumbersProcessor {
                 lineBuilder.append("+");
             }
         }
-        return lineBuilder.append("=").append(result).append("\n").toString();
+        lineBuilder.append("=").append(result).append("\n");
+        return lineBuilder.toString();
     }
 
-    private boolean checkLineValidity(String line) {
+    private boolean hasOnlyAlphabetChars(String line) {
         if (line.trim().isEmpty()) {
             return false;
         }
         for (int i = 0; i < line.length(); i++) {
             char character = line.charAt(i);
-            if ((character < 48 || character > 57) && character != 32) {
+            if ((character < '0' || character > '9') && character != ' ') {
                 return false;
             }
         }

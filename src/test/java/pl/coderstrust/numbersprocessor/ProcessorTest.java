@@ -1,4 +1,4 @@
-package pl.coderstrust.processor;
+package pl.coderstrust.numbersprocessor;
 
 import org.junit.Test;
 import java.util.Arrays;

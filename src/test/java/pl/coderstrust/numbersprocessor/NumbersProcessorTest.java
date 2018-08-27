@@ -1,4 +1,4 @@
-package pl.coderstrust.processor;
+package pl.coderstrust.numbersprocessor;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;

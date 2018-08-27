@@ -1,4 +1,4 @@
-package pl.coderstrust.processor;
+package pl.coderstrust.numbersprocessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +10,6 @@ public class Processor {
     public Processor(NumbersProcessor numbersProcessor, FileProcessor fileProcessor) {
         this.numbersProcessor = numbersProcessor;
         this.fileProcessor = fileProcessor;
-    }
-
-    public static void main(String[] args) {
-        Processor processor = new Processor(new NumbersProcessor(), new FileProcessor());
-        processor.process("task19-sampleTextFile.txt", "task19-resultTextFile.txt");
     }
 
     public void process(String fileName, String resultFileName) {
