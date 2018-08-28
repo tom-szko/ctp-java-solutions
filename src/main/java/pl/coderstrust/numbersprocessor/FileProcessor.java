@@ -14,7 +14,7 @@ class FileProcessor {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.exit(0);
+            System.exit(1);
         }
         return fileContents;
     }
@@ -26,7 +26,7 @@ class FileProcessor {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.exit(0);
+            System.exit(1);
         }
     }
 }

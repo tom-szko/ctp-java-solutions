@@ -23,7 +23,7 @@ public class NumbersProcessor {
         return lineBuilder.toString();
     }
 
-    private boolean hasOnlyAlphabetChars(String line) {
+    private static boolean hasOnlyAlphabetChars(String line) {
         if (line.trim().isEmpty()) {
             return false;
         }
