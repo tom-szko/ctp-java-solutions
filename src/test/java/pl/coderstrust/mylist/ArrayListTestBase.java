@@ -18,15 +18,20 @@ public abstract class ArrayListTestBase {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    List<Long> list;
 
     public abstract List<Long> getList();
 
     public abstract List<Long> getList(int elements);
 
-    @Test
-    public void testDefaultConstructor() {
+    List<Long> list;
 
+    @Test
+    public void testConstructor() {
+        // when
+        list = getList();
+
+        // then
+        assertEquals(0, list.size());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -132,8 +137,49 @@ public abstract class ArrayListTestBase {
     }
 
     @Test
-    public void testToArrayWithGenerics() {
+    @Parameters(method = "testToArrayWithGenericParameters")
+    public void testToArrayWithGeneric(int destinationLength, Long[] expectedResult) {
+        //given
+        list = getList();
+        list.add(1L);
+        list.add(2L);
+        list.add(3L);
+        Long[] destination = new Long[destinationLength];
 
+        //when
+        Object[] actualResult = list.toArray(destination);
+
+        //then
+        assertArrayEquals(expectedResult, actualResult);
+    }
+
+    private Object[] testToArrayWithGenericParameters() {
+        return new Object[]{
+                new Object[]{5, new Long[]{1L, 2L, 3L, null, null}},
+                new Object[]{0, new Long[]{1L, 2L, 3L}},
+                new Object[]{3, new Long[]{1L, 2L, 3L}},
+        };
+    }
+
+    @Test
+    @Parameters(method = "testToArrayWithGenericException")
+    public void testToArrayWithGenericException(Object[] destinationArray, Class exceptionType) {
+        //given
+        list = getList();
+        list.add(1L);
+        list.add(2L);
+        Object[] destination = destinationArray;
+        exception.expect(exceptionType);
+
+        //when
+        list.toArray(destination);
+    }
+
+    private Object[] testToArrayWithGenericException() {
+        return new Object[]{
+                new Object[]{null, NullPointerException.class},
+                new Object[]{new String[5], ArrayStoreException.class},
+        };
     }
 
     @Test
@@ -413,7 +459,7 @@ public abstract class ArrayListTestBase {
 
     @Test
     @Parameters(method = "testLastIndexOfParameters")
-    public void testLastIndexOf(Object o, int expectedLastIndex) {
+    public void testLastIndexOf(Object object, int expectedLastIndex) {
         // given
         list = getList();
         list.add(1L);
@@ -423,7 +469,7 @@ public abstract class ArrayListTestBase {
         list.add(4L);
 
         // when
-        int actualLastIndex = list.lastIndexOf(o);
+        int actualLastIndex = list.lastIndexOf(object);
 
         // then
         assertEquals(expectedLastIndex, actualLastIndex);

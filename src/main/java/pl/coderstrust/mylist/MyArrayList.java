@@ -2,7 +2,7 @@ package pl.coderstrust.mylist;
 
 import java.util.*;
 
-public class MyArrayList implements List<Long> {
+public class MyArrayList<T> implements List<T> {
 
     private Object[] elementContainer;
     private int listSize;
@@ -46,20 +46,26 @@ public class MyArrayList implements List<Long> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T[] toArray(T[] a) {
-        return (T[]) Arrays.copyOf(elementContainer, a.length);
+    public <T> T[] toArray(T[] array) {
+        if (array.length < listSize) {
+            return (T[]) Arrays.copyOf(elementContainer, listSize, array.getClass());
+        }
+        System.arraycopy(elementContainer, 0, array, 0, listSize);
+        if (array.length > listSize) {
+            array[listSize] = null;
+        }
+        return array;
     }
 
     @Override
-    public boolean add(Long aLong) {
+    public boolean add(T t) {
         if (listSize + 1 <= elementContainer.length) {
-            elementContainer[listSize] = aLong;
+            elementContainer[listSize] = t;
             listSize++;
             return true;
         } else if (listSize + 1 >= elementContainer.length) {
-            elementContainer = Arrays.copyOf(elementContainer, elementContainer.length + 10);
-            elementContainer[listSize] = aLong;
+            elementContainer = grow();
+            elementContainer[listSize] = t;
             listSize++;
             return true;
         }
@@ -72,6 +78,9 @@ public class MyArrayList implements List<Long> {
             if (elementContainer[i].equals(o)) {
                 System.arraycopy(elementContainer, i + 1, elementContainer, i, listSize - i);
                 listSize--;
+                if (listSize < elementContainer.length / 4) {
+                    elementContainer = shrink();
+                }
                 return true;
             }
         }
@@ -85,30 +94,30 @@ public class MyArrayList implements List<Long> {
     }
 
     @Override
-    public Long get(int index) {
+    public T get(int index) {
         if (index < 0 || index >= listSize) {
             throw new IndexOutOfBoundsException("Index out of bounds!");
         }
-        return (Long) elementContainer[index];
+        return (T) elementContainer[index];
     }
 
     @Override
-    public Long set(int index, Long element) {
+    public T set(int index, T element) {
         if (index < 0 || index >= listSize) {
             throw new IndexOutOfBoundsException("Index out of bounds!");
         }
-        Long oldElement = (Long) elementContainer[index];
+        T oldElement = (T) elementContainer[index];
         elementContainer[index] = element;
         return oldElement;
     }
 
     @Override
-    public void add(int index, Long element) {
+    public void add(int index, T element) {
         if (index < 0 || index > listSize) {
             throw new IndexOutOfBoundsException("Index out of bounds!");
         }
         if (listSize + 1 > elementContainer.length) {
-            elementContainer = Arrays.copyOf(elementContainer, elementContainer.length + 10);
+            elementContainer = grow();
         }
         System.arraycopy(elementContainer, index, elementContainer, index + 1, listSize - index);
         listSize++;
@@ -116,13 +125,16 @@ public class MyArrayList implements List<Long> {
     }
 
     @Override
-    public Long remove(int index) {
+    public T remove(int index) {
         if (index < 0 || index >= listSize) {
             throw new IndexOutOfBoundsException("Index out of bounds!");
         }
-        Long oldElement = (Long) elementContainer[index];
+        T oldElement = (T) elementContainer[index];
         System.arraycopy(elementContainer, index + 1, elementContainer, index, listSize - index);
         listSize--;
+        if (listSize < elementContainer.length / 4) {
+            elementContainer = shrink();
+        }
         return oldElement;
     }
 
@@ -148,7 +160,7 @@ public class MyArrayList implements List<Long> {
     }
 
     @Override
-    public List<Long> subList(int fromIndex, int toIndex) {
+    public List<T> subList(int fromIndex, int toIndex) {
         if (fromIndex < 0) {
             throw new IndexOutOfBoundsException("fromIndex is out of bounds!");
         }
@@ -159,9 +171,9 @@ public class MyArrayList implements List<Long> {
             throw new IllegalArgumentException("fromIndex cannot be greater than toIndex.");
         }
         int size = toIndex - fromIndex;
-        List<Long> resultList = new MyArrayList(size);
+        List<T> resultList = new MyArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            resultList.add(i, (Long) this.elementContainer[fromIndex + i]);
+            resultList.add(i, (T) this.elementContainer[fromIndex + i]);
         }
         return resultList;
     }
@@ -177,10 +189,10 @@ public class MyArrayList implements List<Long> {
     }
 
     @Override
-    public boolean addAll(Collection<? extends Long> c) {
+    public boolean addAll(Collection<? extends T> collection) {
         boolean isModified = false;
-        for (Long l : c) {
-            if (this.add(l)) {
+        for (T t : collection) {
+            if (this.add(t)) {
                 isModified = true;
             }
         }
@@ -188,7 +200,7 @@ public class MyArrayList implements List<Long> {
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends Long> collection) {
+    public boolean addAll(int index, Collection<? extends T> collection) {
         boolean isModified = false;
         if (listSize + collection.size() > elementContainer.length) {
             elementContainer = Arrays.copyOf(elementContainer, elementContainer.length + collection.size());
@@ -196,8 +208,8 @@ public class MyArrayList implements List<Long> {
         for (int i = listSize - 1; i > index + collection.size(); i--) {
             elementContainer[i] = elementContainer[listSize - (index + collection.size())];
         }
-        for (Long l : collection) {
-            this.add(index, l);
+        for (T t : collection) {
+            this.add(index, t);
             index++;
             isModified = true;
         }
@@ -236,21 +248,29 @@ public class MyArrayList implements List<Long> {
     }
 
     @Override
-    public Iterator<Long> iterator() {
+    public Iterator<T> iterator() {
         return new MyIterator();
     }
 
     @Override
-    public ListIterator<Long> listIterator() {
+    public ListIterator<T> listIterator() {
         return new MyListIterator(0);
     }
 
     @Override
-    public ListIterator<Long> listIterator(int index) {
+    public ListIterator<T> listIterator(int index) {
         return new MyListIterator(index);
     }
 
-    private class MyIterator implements Iterator<Long> {
+    private T[] grow() {
+        return (T[]) Arrays.copyOf(elementContainer, elementContainer.length * 2);
+    }
+
+    private T[] shrink() {
+        return (T[]) Arrays.copyOf(elementContainer, elementContainer.length / 4);
+    }
+
+    private class MyIterator implements Iterator<T> {
 
         int elementIndex;
 
@@ -264,9 +284,9 @@ public class MyArrayList implements List<Long> {
         }
 
         @Override
-        public Long next() {
+        public T next() {
             try {
-                Long element = get(elementIndex);
+                T element = get(elementIndex);
                 elementIndex++;
                 return element;
             } catch (IndexOutOfBoundsException e) {
@@ -275,7 +295,7 @@ public class MyArrayList implements List<Long> {
         }
     }
 
-    private class MyListIterator extends MyIterator implements ListIterator<Long> {
+    private class MyListIterator extends MyIterator implements ListIterator<T> {
 
         MyListIterator(int index) {
             super();
@@ -291,7 +311,7 @@ public class MyArrayList implements List<Long> {
         }
 
         @Override
-        public Long previous() {
+        public T previous() {
             try {
                 elementIndex--;
                 return get(elementIndex);
@@ -316,12 +336,12 @@ public class MyArrayList implements List<Long> {
         }
 
         @Override
-        public void set(Long t) {
+        public void set(T t) {
             throw new UnsupportedOperationException("set");
         }
 
         @Override
-        public void add(Long t) {
+        public void add(T t) {
             throw new UnsupportedOperationException("add");
         }
     }
