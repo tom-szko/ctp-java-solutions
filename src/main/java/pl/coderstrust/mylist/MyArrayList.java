@@ -12,7 +12,7 @@ public class MyArrayList<T> implements List<T> {
             elementContainer = new Object[numberOfItems];
             listSize = 0;
         } else {
-            throw new IllegalArgumentException("Illegal numberOfItems: " + numberOfItems + ".");
+            throw new IllegalArgumentException("numberOfItems cannot be negative!");
         }
     }
 
@@ -58,24 +58,19 @@ public class MyArrayList<T> implements List<T> {
     }
 
     @Override
-    public boolean add(T t) {
-        if (listSize + 1 <= elementContainer.length) {
-            elementContainer[listSize] = t;
-            listSize++;
-            return true;
-        } else if (listSize + 1 >= elementContainer.length) {
+    public boolean add(T element) {
+        if (listSize + 1 > elementContainer.length) {
             elementContainer = grow();
-            elementContainer[listSize] = t;
-            listSize++;
-            return true;
         }
-        return false;
+        elementContainer[listSize] = element;
+        listSize++;
+        return true;
     }
 
     @Override
-    public boolean remove(Object o) {
+    public boolean remove(Object object) {
         for (int i = 0; i < listSize; i++) {
-            if (elementContainer[i].equals(o)) {
+            if (elementContainer[i].equals(object)) {
                 System.arraycopy(elementContainer, i + 1, elementContainer, i, listSize - i);
                 listSize--;
                 if (listSize < elementContainer.length / 4) {
@@ -179,9 +174,9 @@ public class MyArrayList<T> implements List<T> {
     }
 
     @Override
-    public boolean containsAll(Collection<?> c) {
-        for (Object o : c) {
-            if (!this.contains(o)) {
+    public boolean containsAll(Collection<?> collection) {
+        for (Object object : collection) {
+            if (!this.contains(object)) {
                 return false;
             }
         }
@@ -191,8 +186,8 @@ public class MyArrayList<T> implements List<T> {
     @Override
     public boolean addAll(Collection<? extends T> collection) {
         boolean isModified = false;
-        for (T t : collection) {
-            if (this.add(t)) {
+        for (T element : collection) {
+            if (this.add(element)) {
                 isModified = true;
             }
         }
@@ -208,8 +203,8 @@ public class MyArrayList<T> implements List<T> {
         for (int i = listSize - 1; i > index + collection.size(); i--) {
             elementContainer[i] = elementContainer[listSize - (index + collection.size())];
         }
-        for (T t : collection) {
-            this.add(index, t);
+        for (T element : collection) {
+            this.add(index, element);
             index++;
             isModified = true;
         }
@@ -289,7 +284,7 @@ public class MyArrayList<T> implements List<T> {
                 T element = get(elementIndex);
                 elementIndex++;
                 return element;
-            } catch (IndexOutOfBoundsException e) {
+            } catch (IndexOutOfBoundsException ex) {
                 throw new NoSuchElementException();
             }
         }
@@ -315,7 +310,7 @@ public class MyArrayList<T> implements List<T> {
             try {
                 elementIndex--;
                 return get(elementIndex);
-            } catch (IndexOutOfBoundsException e) {
+            } catch (IndexOutOfBoundsException ex) {
                 throw new NoSuchElementException();
             }
         }
@@ -336,12 +331,12 @@ public class MyArrayList<T> implements List<T> {
         }
 
         @Override
-        public void set(T t) {
+        public void set(T element) {
             throw new UnsupportedOperationException("set");
         }
 
         @Override
-        public void add(T t) {
+        public void add(T element) {
             throw new UnsupportedOperationException("add");
         }
     }
