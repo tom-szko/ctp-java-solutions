@@ -85,7 +85,7 @@ public class IPCheckerTest {
     public void testFourthNumber() {
         for (int i = 0; i < 256; i++) {
             // given
-            String ipAddress = "1.1.1" + i;
+            String ipAddress = "1.1.1." + i;
 
             // when
             boolean isValidIp = IPChecker.isIpAddress(ipAddress);
