@@ -3,7 +3,9 @@ package pl.coderstrust.regex;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertFalse;
@@ -11,6 +13,9 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnitParamsRunner.class)
 public class IPCheckerTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Ignore("2h 51m 48s on 2,9 GHz Intel Core i5")
     @Test
@@ -31,61 +36,22 @@ public class IPCheckerTest {
             }
         }
         long endTime = System.currentTimeMillis();
-        getProcessTime(startTime, endTime);
+        printExecutionTime(startTime, endTime);
     }
 
-    private void getProcessTime(long startTime, long endTime) {
+    private void printExecutionTime(long startTime, long endTime) {
         long processTimeInSeconds = (endTime - startTime) / 1000;
-        System.out.println(processTimeInSeconds / 60 + "m " + processTimeInSeconds % 60 + "s");
+        long minutes = processTimeInSeconds / 60;
+        long seconds = processTimeInSeconds % 60;
+        System.out.println(minutes + "m " + seconds + "s");
     }
 
     @Test
-    public void testFirstNumber() {
+    @Parameters({"%d.1.1.1", "1.%d.1.1", "1.1.%d.1", "1.1.1.%d"})
+    public void smartTestForValidIpAddresses(String ipAddressTemplate) {
         for (int i = 0; i < 256; i++) {
             // given
-            String ipAddress = i + ".1.1.1";
-
-            // when
-            boolean isValidIp = IPChecker.isIpAddress(ipAddress);
-
-            // then
-            assertTrue(isValidIp);
-        }
-    }
-
-    @Test
-    public void testSecondNumber() {
-        for (int i = 0; i < 256; i++) {
-            // given
-            String ipAddress = "1." + i + ".1.1";
-
-            // when
-            boolean isValidIp = IPChecker.isIpAddress(ipAddress);
-
-            // then
-            assertTrue(isValidIp);
-        }
-    }
-
-    @Test
-    public void testThirdNumber() {
-        for (int i = 0; i < 256; i++) {
-            // given
-            String ipAddress = "1.1." + i + ".1";
-
-            // when
-            boolean isValidIp = IPChecker.isIpAddress(ipAddress);
-
-            // then
-            assertTrue(isValidIp);
-        }
-    }
-
-    @Test
-    public void testFourthNumber() {
-        for (int i = 0; i < 256; i++) {
-            // given
-            String ipAddress = "1.1.1." + i;
+            String ipAddress = String.format(ipAddressTemplate, i);
 
             // when
             boolean isValidIp = IPChecker.isIpAddress(ipAddress);
@@ -120,8 +86,13 @@ public class IPCheckerTest {
         };
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testNullAsIpAddress() {
+        // given
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("IP address cannot be null.");
+
+        // when
         IPChecker.isIpAddress(null);
     }
 }
