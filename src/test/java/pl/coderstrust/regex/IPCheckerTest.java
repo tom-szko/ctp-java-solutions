@@ -43,7 +43,7 @@ public class IPCheckerTest {
         long processTimeInSeconds = (endTime - startTime) / 1000;
         long minutes = processTimeInSeconds / 60;
         long seconds = processTimeInSeconds % 60;
-        System.out.println(minutes + "m " + seconds + "s");
+        System.out.printf("%dm %ds", minutes, seconds);
     }
 
     @Test
