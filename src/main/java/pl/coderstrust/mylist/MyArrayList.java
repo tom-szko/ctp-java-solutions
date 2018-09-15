@@ -6,14 +6,17 @@ public class MyArrayList<T> implements List<T> {
 
     private Object[] elementContainer;
     private int listSize;
+    private static final int ARRAY_MAX_SIZE = 100;
 
     MyArrayList(int numberOfItems) {
-        if (numberOfItems >= 0) {
-            elementContainer = new Object[numberOfItems];
-            listSize = 0;
-        } else {
+        if (numberOfItems < 0) {
             throw new IllegalArgumentException("numberOfItems cannot be negative!");
         }
+        if (numberOfItems > 100) {
+            throw new IllegalArgumentException("numberOfItems cannot be greater than 100!");
+        }
+        elementContainer = new Object[numberOfItems];
+        listSize = 0;
     }
 
     MyArrayList() {
@@ -258,7 +261,20 @@ public class MyArrayList<T> implements List<T> {
     }
 
     private T[] grow() {
-        return (T[]) Arrays.copyOf(elementContainer, elementContainer.length * 2);
+        int newContainerLength;
+        int currentContainerLength = elementContainer.length;
+        if (currentContainerLength + 1 > ARRAY_MAX_SIZE) {
+            throw new OutOfMemoryError("Internal array element limit was exceeded!");
+        }
+        if (currentContainerLength == 0) {
+            newContainerLength = currentContainerLength + 10;
+        }
+        if (currentContainerLength * 2 < ARRAY_MAX_SIZE) {
+            newContainerLength = currentContainerLength * 2;
+        } else {
+            newContainerLength = ARRAY_MAX_SIZE;
+        }
+        return (T[]) Arrays.copyOf(elementContainer, newContainerLength);
     }
 
     private T[] shrink() {

@@ -5,12 +5,12 @@ import java.util.List;
 
 public class ArrayListTest extends ArrayListTestBase {
     @Override
-    public List<Long> getList() {
+    public List<Long> getEmptyList() {
         return new ArrayList<>();
     }
 
     @Override
-    public List<Long> getList(int elements) {
+    public List<Long> getEmptyList(int elements) {
         return new ArrayList<>(elements);
     }
 }

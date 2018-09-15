@@ -19,101 +19,72 @@ public abstract class ArrayListTestBase {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    public abstract List<Long> getList();
+    public abstract List<Long> getEmptyList();
 
-    public abstract List<Long> getList(int elements);
+    public abstract List<Long> getEmptyList(int elements);
 
     List<Long> list;
 
     @Test
-    public void testConstructor() {
+    public void testEmptyList() {
         // when
-        list = getList();
+        list = getEmptyList();
 
         // then
         assertEquals(0, list.size());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructorWithIllegalParameter() {
-        // given
-        int numberOfElements = -3;
-
-        // when
-        getList(numberOfElements);
+    @Parameters({"-3", "101"})
+    public void testConstructorWithIllegalParameters(int numberOfElements) {
+        new MyArrayList<>(numberOfElements);
     }
 
     @Test
-    public void testSize() {
+    public void testSizeWhenSomeNumbersAdded() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(2L);
         list.add(4L);
         list.add(6L);
-        int expectedSize = 3;
 
-        //when
+        // when
         int actualSize = list.size();
 
         // then
-        assertEquals(expectedSize, actualSize);
+        assertEquals(3, actualSize);
     }
 
     @Test
-    public void testIsEmptyWhenEmpty() {
+    public void testIsEmptyWhenListSizeIsZero() {
         // given
-        list = getList();
-        boolean expectedIsEmpty = true;
-
-        //when
-        boolean actualIsEmpty = list.isEmpty();
+        list = getEmptyList();
 
         // then
-        assertEquals(expectedIsEmpty, actualIsEmpty);
+        assertTrue(list.isEmpty());
     }
 
     @Test
-    public void testIsEmptyWhenNotEmpty() {
+    public void testIsEmptyWhenListSizeGreaterThanZero() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(3L);
-        boolean expectedIsEmpty = false;
-
-        //when
-        boolean actualIsEmpty = list.isEmpty();
 
         // then
-        assertEquals(expectedIsEmpty, actualIsEmpty);
+        assertFalse(list.isEmpty());
     }
 
     @Test
-    public void testContainsWhenItemOnTheList() {
+    @Parameters({"5, true", "6, true", "-9, true", "1, false"})
+    public void testContains(long element, boolean expectedContains) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(5L);
         list.add(6L);
         list.add(-9L);
-        boolean expectedContains = true;
 
         // when
-        boolean actualContains = list.contains(6L);
-
-        // then
-        assertEquals(expectedContains, actualContains);
-    }
-
-
-    @Test
-    public void testContainsWhenItemNotOnTheList() {
-        // given
-        list = getList();
-        list.add(5L);
-        list.add(6L);
-        list.add(-9L);
-        boolean expectedContains = false;
-
-        // when
-        boolean actualContains = list.contains(1L);
+        boolean actualContains = list.contains(element);
 
         // then
         assertEquals(expectedContains, actualContains);
@@ -121,35 +92,34 @@ public abstract class ArrayListTestBase {
 
     @Test
     public void testToArrayWithObject() {
-        //given
-        list = getList();
+        // given
+        list = getEmptyList();
         list.add(5L);
         list.add(6L);
         list.add(-9L);
         list.add(-12332L);
-        Object[] expectedResult = {5L, 6L, -9L, -12332L};
 
-        //when
+        // when
         Object[] actualResult = list.toArray();
 
-        //then
-        assertArrayEquals(expectedResult, actualResult);
+        // then
+        assertArrayEquals(new Object[]{5L, 6L, -9L, -12332L}, actualResult);
     }
 
     @Test
     @Parameters(method = "testToArrayWithGenericParameters")
     public void testToArrayWithGeneric(int destinationLength, Long[] expectedResult) {
-        //given
-        list = getList();
+        // given
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
         Long[] destination = new Long[destinationLength];
 
-        //when
+        // when
         Object[] actualResult = list.toArray(destination);
 
-        //then
+        // then
         assertArrayEquals(expectedResult, actualResult);
     }
 
@@ -164,14 +134,14 @@ public abstract class ArrayListTestBase {
     @Test
     @Parameters(method = "testToArrayWithGenericException")
     public void testToArrayWithGenericException(Object[] destinationArray, Class exceptionType) {
-        //given
-        list = getList();
+        // given
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         Object[] destination = destinationArray;
-        exception.expect(exceptionType);
 
-        //when
+        // when
+        exception.expect(exceptionType);
         list.toArray(destination);
     }
 
@@ -183,33 +153,53 @@ public abstract class ArrayListTestBase {
     }
 
     @Test
-    public void testAdd() {
+    @Parameters(method = "testAddParameters")
+    public void testAdd(Long[] elementsToAdd, int expectedListSize) {
         // given
-        list = getList();
-        Object[] expectedResultArray = {4L};
-        int expectedListSize = 1;
+        list = getEmptyList();
 
-        //when
-        boolean actualResult = list.add(4L);
+        // when
+        boolean actualResult = false;
+        for(int i = 0; i < elementsToAdd.length; i++) {
+            actualResult = list.add(elementsToAdd[i]);
+        }
         Object[] actualResultArray = list.toArray();
         int actualListSize = list.size();
 
-        //then
+        // then
         assertTrue(actualResult);
-        assertArrayEquals(expectedResultArray, actualResultArray);
+        assertArrayEquals(elementsToAdd, actualResultArray);
         assertEquals(expectedListSize, actualListSize);
+    }
+
+    private Object[] testAddParameters() {
+        return new Object[] {
+                new Object[]{new Long[]{1L}, 1},
+                new Object[]{new Long[]{1L, 2L, 3L, 4L, 5L}, 5},
+                new Object[]{new Long[]{1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L}, 11},
+        };
+    }
+
+    @Test(expected = OutOfMemoryError.class)
+    public void testAddException() {
+        // given
+        list = new MyArrayList<>();
+        for(long i = 0; i < 101; i++) {
+            list.add(i);
+        }
+
+        // when
+        list.add(101L);
     }
 
     @Test
     public void testRemoveExistentElement() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(13L);
         list.add(45L);
         list.add(123L);
         list.add(1L);
-        Object[] expectedResultArray = {13L, 123L, 1L};
-        int expectedListSize = 3;
 
         // when
         boolean actualRemoveResult = list.remove(45L);
@@ -218,21 +208,19 @@ public abstract class ArrayListTestBase {
 
         // then
         assertTrue(actualRemoveResult);
-        assertArrayEquals(expectedResultArray, actualResultArray);
-        assertEquals(expectedListSize, actualListSize);
+        assertArrayEquals(new Object[]{13L, 123L, 1L}, actualResultArray);
+        assertEquals(3, actualListSize);
     }
 
     @Test
     public void testRemoveElementWhenDoubled() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(13L);
         list.add(45L);
         list.add(45L);
         list.add(45L);
         list.add(1L);
-        Object[] expectedResultArray = {13L, 45L, 45L, 1L};
-        int expectedListSize = 4;
 
         // when
         boolean actualRemoveResult = list.remove(45L);
@@ -241,20 +229,18 @@ public abstract class ArrayListTestBase {
 
         // then
         assertTrue(actualRemoveResult);
-        assertArrayEquals(expectedResultArray, actualResultArray);
-        assertEquals(expectedListSize, actualListSize);
+        assertArrayEquals(new Object[]{13L, 45L, 45L, 1L}, actualResultArray);
+        assertEquals(4, actualListSize);
     }
 
     @Test
     public void testRemoveNonExistentElement() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(13L);
         list.add(45L);
         list.add(123L);
         list.add(1L);
-        Object[] expectedResultArray = {13L, 45L, 123L, 1L};
-        int expectedListSize = 4;
 
         // when
         boolean actualRemoveResult = list.remove(44L);
@@ -262,17 +248,15 @@ public abstract class ArrayListTestBase {
         int actualListSize = list.size();
 
         // then
-        assertTrue(!actualRemoveResult);
-        assertArrayEquals(expectedResultArray, actualResultArray);
-        assertEquals(expectedListSize, actualListSize);
+        assertFalse(actualRemoveResult);
+        assertArrayEquals(new Object[]{13L, 45L, 123L, 1L}, actualResultArray);
+        assertEquals(4, actualListSize);
     }
 
     @Test
-    public void testClear() {
+    public void testClearWithEmptyList() {
         // given
-        list = getList();
-        Object[] expectedListContents = {};
-        int expectedSize = 0;
+        list = getEmptyList();
 
         // when
         list.clear();
@@ -280,15 +264,33 @@ public abstract class ArrayListTestBase {
         Object[] actualListContents = list.toArray();
 
         // then
-        assertEquals(expectedSize, actualSize);
-        assertArrayEquals(expectedListContents, actualListContents);
+        assertEquals(0, actualSize);
+        assertArrayEquals(new Object[]{}, actualListContents);
+    }
+
+    @Test
+    public void testClearWithNonEmptyList() {
+        // given
+        list = getEmptyList();
+        list.add(13L);
+        list.add(45L);
+        list.add(123L);
+
+        // when
+        list.clear();
+        int actualSize = list.size();
+        Object[] actualListContents = list.toArray();
+
+        // then
+        assertEquals(0, actualSize);
+        assertArrayEquals(new Object[]{}, actualListContents);
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
     @Parameters({"-1", "4", "6"})
     public void testGetWithIllegalIndex(int index) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(4L);
         list.add(3L);
         list.add(5L);
@@ -301,7 +303,7 @@ public abstract class ArrayListTestBase {
     @Parameters(method = "testGetParameters")
     public void testGet(int index, Long expectedElement) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(4L);
         list.add(3L);
         list.add(5L);
@@ -309,7 +311,7 @@ public abstract class ArrayListTestBase {
         // when
         Long actualElement = list.get(index);
 
-        //then
+        // then
         assertEquals(expectedElement, actualElement);
     }
 
@@ -325,7 +327,7 @@ public abstract class ArrayListTestBase {
     @Parameters({"-1", "3", "6"})
     public void testSetWithIllegalIndex(int index) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(4L);
         list.add(3L);
         list.add(5L);
@@ -336,25 +338,29 @@ public abstract class ArrayListTestBase {
 
     @Test
     @Parameters(method = "testSetParameters")
-    public void testSet(int index, Long newElement, Long expectedOldElement) {
+    public void testSet(int index, Long newElement, Long expectedOldElement, Object[] expectedContents, int expectedSize) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
 
         // when
         Long actualOldElement = list.set(index, newElement);
+        int actualSize = list.size();
+        Object[] actualContents = list.toArray();
 
         // then
         assertEquals(expectedOldElement, actualOldElement);
+        assertEquals(expectedSize, actualSize);
+        assertArrayEquals(expectedContents, actualContents);
     }
 
     private Object[] testSetParameters() {
         return new Object[]{
-                new Object[]{0, 10L, 1L},
-                new Object[]{1, 11L, 2L},
-                new Object[]{2, 12L, 3L}
+                new Object[]{0, 10L, 1L, new Object[]{10L, 2L, 3L}, 3},
+                new Object[]{1, 11L, 2L, new Object[]{1L, 11L, 3L}, 3},
+                new Object[]{2, 12L, 3L, new Object[]{1L, 2L, 12L}, 3},
         };
     }
 
@@ -362,7 +368,7 @@ public abstract class ArrayListTestBase {
     @Parameters({"-1", "4", "6"})
     public void testAddAtIndexWithIllegalArgument(int index) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(4L);
         list.add(3L);
         list.add(5L);
@@ -375,7 +381,7 @@ public abstract class ArrayListTestBase {
     @Parameters(method = "testAddAtIndexParameters")
     public void testAddAtIndex(int index, Long element, Object[] expectedResultArray, int expectedSize) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
@@ -402,28 +408,26 @@ public abstract class ArrayListTestBase {
     @Test
     public void testRemoveAtIndex() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
         list.add(4L);
-        Long expectedRemovedElement = 3L;
-        int expectedSize = 3;
 
         // when
-        Long actualRemovedElement = list.remove(2);
+        Object actualRemovedElement = list.remove(2);
         int actualSize = list.size();
 
         // then
-        assertEquals(expectedRemovedElement, actualRemovedElement);
-        assertEquals(expectedSize, actualSize);
+        assertEquals(3L, actualRemovedElement);
+        assertEquals(3, actualSize);
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
     @Parameters({"-1", "4", "6"})
     public void testRemoveAtIndexWithIllegalArgument(int index) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(4L);
         list.add(3L);
         list.add(5L);
@@ -436,7 +440,7 @@ public abstract class ArrayListTestBase {
     @Parameters(method = "testIndexOfParameters")
     public void testIndexOf(Object object, int expectedIndex) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
@@ -461,7 +465,7 @@ public abstract class ArrayListTestBase {
     @Parameters(method = "testLastIndexOfParameters")
     public void testLastIndexOf(Object object, int expectedLastIndex) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(4L);
         list.add(3L);
@@ -487,14 +491,14 @@ public abstract class ArrayListTestBase {
     @Parameters(method = "subListIllegalParameters")
     public void testSubListIllegalParameters(int fromIndex, int toIndex, Class exceptionType) throws IndexOutOfBoundsException, IllegalArgumentException {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(4L);
         list.add(3L);
         list.add(5L);
-        exception.expect(exceptionType);
 
         // when
+        exception.expect(exceptionType);
         list.subList(fromIndex, toIndex);
     }
 
@@ -510,7 +514,7 @@ public abstract class ArrayListTestBase {
     @Parameters(method = "subListParameters")
     public void testSubListParameters(int fromIndex, int toIndex, Long[] expectedArray) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
@@ -520,7 +524,7 @@ public abstract class ArrayListTestBase {
         // when
         List<Long> actualSubList = list.subList(fromIndex, toIndex);
 
-        //then
+        // then
         assertArrayEquals(actualSubList.toArray(), expectedArray);
     }
 
@@ -536,7 +540,7 @@ public abstract class ArrayListTestBase {
     @Parameters(method = "containsAllParameters")
     public void testContainsAll(List<Long> anotherList, boolean expectedResult) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(2L);
         list.add(3L);
         list.add(4L);
@@ -560,56 +564,54 @@ public abstract class ArrayListTestBase {
     @Test
     public void testAddAll() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         Object[] expectedArrayFromList = {1L, 2L, 3L, 4L};
-        int expectedListSize = 4;
 
-        //when
+        // when
         boolean actualResult = list.addAll(Arrays.asList(2L, 3L, 4L));
         int actualListSize = list.size();
         Object[] actualArrayFromList = list.toArray();
 
-        //then
+        // then
         assertTrue(actualResult);
         assertArrayEquals(expectedArrayFromList, actualArrayFromList);
-        assertEquals(expectedListSize, actualListSize);
+        assertEquals(4, actualListSize);
     }
 
     @Test
     public void testAddAllWithEmptyCollection() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         Object[] expectedArrayFromList = {1L};
-        int expectedListSize = 1;
 
-        //when
+        // when
         boolean actualResult = list.addAll(Arrays.asList());
         int actualListSize = list.size();
         Object[] actualArrayFromList = list.toArray();
 
-        //then
+        // then
         assertFalse(actualResult);
         assertArrayEquals(expectedArrayFromList, actualArrayFromList);
-        assertEquals(expectedListSize, actualListSize);
+        assertEquals(1, actualListSize);
     }
 
     @Test
     @Parameters(method = "testAddAllAtIndexParameters")
     public void testAddAllAtIndex(int index, List<Long> collection, Object[] expectedResultArray, int expectedListSize, boolean expectedResult) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(10L);
         list.add(20L);
         list.add(30L);
 
-        //when
+        // when
         boolean actualResult = list.addAll(index, collection);
         Object[] actualResultArray = list.toArray();
         int actualListSize = list.size();
 
-        //then
+        // then
         assertEquals(expectedResult, actualResult);
         assertArrayEquals(expectedResultArray, actualResultArray);
         assertEquals(expectedListSize, actualListSize);
@@ -628,18 +630,18 @@ public abstract class ArrayListTestBase {
     @Parameters(method = "testRemoveAllParameters")
     public void testRemoveAll(List<Long> collection, Object[] expectedResultArray, int expectedListSize, boolean expectedResult) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
         list.add(4L);
 
-        //when
+        // when
         boolean actualResult = list.removeAll(collection);
         Object[] actualResultArray = list.toArray();
         int actualListSize = list.size();
 
-        //then
+        // then
         assertEquals(expectedResult, actualResult);
         assertArrayEquals(expectedResultArray, actualResultArray);
         assertEquals(expectedListSize, actualListSize);
@@ -661,18 +663,18 @@ public abstract class ArrayListTestBase {
     @Parameters(method = "testRetainAllParameters")
     public void testRetainAll(List<Long> collection, Object[] expectedResultArray, int expectedListSize, boolean expectedResult) {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
         list.add(4L);
 
-        //when
+        // when
         boolean actualResult = list.retainAll(collection);
         Object[] actualResultArray = list.toArray();
         int actualListSize = list.size();
 
-        //then
+        // then
         assertEquals(expectedResult, actualResult);
         assertArrayEquals(expectedResultArray, actualResultArray);
         assertEquals(expectedListSize, actualListSize);
@@ -697,10 +699,10 @@ public abstract class ArrayListTestBase {
         list = testList;
         Iterator<Long> iterator = list.iterator();
 
-        //when
+        // when
         boolean actualResult = iterator.hasNext();
 
-        //then
+        // then
         assertEquals(expectedResult, actualResult);
     }
 
@@ -714,170 +716,167 @@ public abstract class ArrayListTestBase {
     @Test
     public void testIteratorNext() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         Iterator<Long> iterator = list.iterator();
-        Long expectedNext = 1L;
 
-        //when
-        Long actualNext = iterator.next();
+        // when
+        Object actualNext = iterator.next();
 
-        //then
-        assertEquals(expectedNext, actualNext);
+        // then
+        assertEquals(1L, actualNext);
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testIteratorNextOutOfBounds() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         Iterator<Long> iterator = list.iterator();
         iterator.next();
 
-        //when
+        // when
         iterator.next();
     }
 
     @Test
     public void testListIteratorHasNextWithoutNext() {
         // given
-        list = getList();
+        list = getEmptyList();
         ListIterator<Long> listIterator = list.listIterator();
 
-        //when
+        // when
         boolean actualHasNext = listIterator.hasNext();
 
-        //then
+        // then
         assertFalse(actualHasNext);
     }
 
     @Test
     public void testListIteratorHasNextWithNext() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         ListIterator<Long> listIterator = list.listIterator();
 
-        //when
+        // when
         boolean actualHasNext = listIterator.hasNext();
 
-        //then
+        // then
         assertTrue(actualHasNext);
     }
 
     @Test
     public void testListIteratorNext() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         ListIterator<Long> listIterator = list.listIterator();
-        Long expectedNext = 1L;
 
-        //when
-        Long actualNext = listIterator.next();
+        // when
+        Object actualNext = listIterator.next();
 
-        //then
-        assertEquals(expectedNext, actualNext);
+        // then
+        assertEquals(1L, actualNext);
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testListIteratorNextOutOfBounds() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         ListIterator<Long> listIterator = list.listIterator();
         listIterator.next();
 
-        //when
+        // when
         listIterator.next();
     }
 
     @Test
     public void testListIteratorHasPrevious() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
         ListIterator<Long> listIterator = list.listIterator(1);
 
-        //when
+        // when
         boolean actualResult = listIterator.hasPrevious();
 
-        //then
+        // then
         assertTrue(actualResult);
     }
 
     @Test
     public void testListIteratorHasNoPrevious() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         ListIterator<Long> listIterator = list.listIterator(0);
 
-        //when
+        // when
         boolean actualResult = listIterator.hasPrevious();
 
-        //then
+        // then
         assertFalse(actualResult);
     }
 
     @Test
     public void testListIteratorPrevious() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         ListIterator<Long> listIterator = list.listIterator(1);
-        Long expectedPrevious = 1L;
 
         // when
-        Long actualPrevious = listIterator.previous();
+        Object actualPrevious = listIterator.previous();
 
         // then
-        assertEquals(expectedPrevious, actualPrevious);
+        assertEquals(1L, actualPrevious);
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testListIteratorPreviousException() {
         // given
-        list = getList();
+        list = getEmptyList();
         list.add(1L);
         ListIterator<Long> listIterator = list.listIterator(0);
 
-        //when
+        // when
         listIterator.previous();
     }
 
     @Test
     public void testListIteratorNextIndex() {
-        list = getList();
+        // given
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
         ListIterator<Long> listIterator = list.listIterator(2);
-        int expectedNextIndex = 2;
 
         // when
         int actualNextIndex = listIterator.nextIndex();
 
         // then
-        assertEquals(expectedNextIndex, actualNextIndex);
+        assertEquals(2, actualNextIndex);
     }
 
     @Test
     public void testListIteratorPreviousIndex() {
-        list = getList();
+        // given
+        list = getEmptyList();
         list.add(1L);
         list.add(2L);
         list.add(3L);
         ListIterator<Long> listIterator = list.listIterator(1);
-        int expectedPreviousIndex = 1;
 
         // when
         int actualPreviousIndex = listIterator.nextIndex();
 
         // then
-        assertEquals(expectedPreviousIndex, actualPreviousIndex);
+        assertEquals(1, actualPreviousIndex);
     }
 }
