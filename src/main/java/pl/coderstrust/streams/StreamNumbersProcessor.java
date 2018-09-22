@@ -11,8 +11,8 @@ public class StreamNumbersProcessor {
 
     public void process(String fileName, String resultFileName) throws IOException {
         StringBuilder outputContents = new StringBuilder();
-        Consumer<Integer> appendSumAtEndOfFile = d -> outputContents.deleteCharAt(outputContents.length() - 1)
-                .append(String.format("=%d\n", d));
+        Consumer<Integer> appendSumAtEndOfFile = sum -> outputContents.deleteCharAt(outputContents.length() - 1)
+                .append(String.format("=%d\n", sum));
         Files.lines(Paths.get(fileName))
                 .filter(line -> line.matches("^[0-9 ]+$"))
                 .map(unparsedNumbers -> Arrays.stream(unparsedNumbers.split("\\s"))

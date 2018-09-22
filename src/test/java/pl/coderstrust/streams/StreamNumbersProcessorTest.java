@@ -15,14 +15,14 @@ public class StreamNumbersProcessorTest {
     public void testProcessor() throws IOException {
         //given
         StreamNumbersProcessor processor = new StreamNumbersProcessor();
-        String input = "src/test/resources/pl.coderstrust.streams/task19-sampleTextFile.txt";
-        String actualOutput = "src/test/resources/pl.coderstrust.streams/task19-resultTextFile.txt";
+        String input = "src/test/resources/pl.coderstrust.streams/task26-sampleTextFile.txt";
+        String actualOutput = "src/test/resources/pl.coderstrust.streams/task26-resultTextFile.txt";
 
         //when
         processor.process(input, actualOutput);
 
         //then
-        String expectedOutput = "src/test/resources/pl.coderstrust.streams/task19-expectedOutputFile.txt";
+        String expectedOutput = "src/test/resources/pl.coderstrust.streams/task26-expectedOutputFile.txt";
         byte[] expectedOutputBytes = Files.readAllBytes(Paths.get(expectedOutput));
         String expectedOutputContents = new String(expectedOutputBytes, StandardCharsets.UTF_8);
         byte[] actualOutputBytes = Files.readAllBytes(Paths.get(actualOutput));
