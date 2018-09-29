@@ -1,8 +1,18 @@
 package pl.coderstrust.multithreading;
 
-class ThreadColors {
-    static final String RED = "\u001B[31m";
-    static final String GREEN = "\u001B[32m";
-    static final String PURPLE = "\u001B[35m";
-    static final String CYAN = "\u001B[36m";
+enum ThreadColour {
+    RED ("\u001B[31m"),
+    GREEN ("\u001B[32m"),
+    PURPLE ("\u001B[35m"),
+    CYAN ("\u001B[36m");
+
+    private final String colour;
+
+    ThreadColour(String colour) {
+        this.colour = colour;
+    }
+
+    public String getColour() {
+        return colour;
+    }
 }

@@ -5,7 +5,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static pl.coderstrust.multithreading.ThreadColors.*;
+import static pl.coderstrust.multithreading.ThreadColour.*;
 
 public class MultipleConsumers {
     public static void main(String[] args) {
