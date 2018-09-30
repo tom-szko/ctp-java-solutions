@@ -2,7 +2,9 @@ package pl.coderstrust.mylinkedlist;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import java.util.Iterator;
@@ -12,6 +14,9 @@ import static org.junit.Assert.*;
 
 @RunWith(JUnitParamsRunner.class)
 public class MyLinkedListTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void testEmptyList() {
@@ -69,12 +74,13 @@ public class MyLinkedListTest {
         };
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void testAddWithIllegalArgument() {
         // given
         MyLinkedList<Integer> myList = new MyLinkedList<>();
 
         // when
+        exception.expect(IllegalArgumentException.class);
         myList.add(null);
     }
 
@@ -180,14 +186,15 @@ public class MyLinkedListTest {
         assertEquals("Two", actualNextElement);
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void testNextWithException() {
+    @Test
+    public void testNextWithException() throws NoSuchElementException {
         // given
         MyLinkedList<String> myList = new MyLinkedList<>();
         myList.add("One");
         Iterator iterator = myList.iterator();
 
         // when
+        exception.expect(NoSuchElementException.class);
         iterator.next();
     }
 }
