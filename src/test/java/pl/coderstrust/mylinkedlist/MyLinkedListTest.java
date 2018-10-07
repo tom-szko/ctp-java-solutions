@@ -32,8 +32,8 @@ public class MyLinkedListTest {
     public void testSize(String[] elements, int expectedSize) {
         // given
         MyLinkedList<String> myList = new MyLinkedList<>();
-        for (int i = 0; i < elements.length; i++) {
-            myList.add(elements[i]);
+        for (String element : elements) {
+            myList.add(element);
         }
 
         // then
@@ -55,8 +55,8 @@ public class MyLinkedListTest {
         MyLinkedList<Integer> myList = new MyLinkedList<>();
 
         // when
-        for (int i = 0; i < elements.length; i++) {
-            myList.add(elements[i]);
+        for (Integer element : elements) {
+            myList.add(element);
         }
         int actualSize = myList.size();
         Object[] actualContents = myList.toArray();
@@ -75,7 +75,7 @@ public class MyLinkedListTest {
     }
 
     @Test
-    public void testAddWithIllegalArgument() {
+    public void testAddWithNull() {
         // given
         MyLinkedList<Integer> myList = new MyLinkedList<>();
 
@@ -115,6 +115,17 @@ public class MyLinkedListTest {
     }
 
     @Test
+    public void testRemoveWithNull() {
+        // given
+        MyLinkedList<String> myList = new MyLinkedList<>();
+        myList.add("One");
+
+        // when
+        exception.expect(IllegalArgumentException.class);
+        myList.remove(null);
+    }
+
+    @Test
     @Parameters(method = "testContainsParameters")
     public void testContains(String element, boolean expectedResult) {
         // given
@@ -140,6 +151,41 @@ public class MyLinkedListTest {
     }
 
     @Test
+    public void testContainsWithNull() {
+        // given
+        MyLinkedList<String> myList = new MyLinkedList<>();
+        myList.add("One");
+
+        // when
+        exception.expect(IllegalArgumentException.class);
+        myList.contains(null);
+    }
+
+    @Test
+    @Parameters(method = "testToArrayParameters")
+    public void testToArray(Integer[] elements) {
+        // given
+        MyLinkedList<Integer> myList = new MyLinkedList<>();
+        for (Integer element : elements) {
+            myList.add(element);
+        }
+
+        // when
+        Object[] actualContents = myList.toArray();
+
+        // then
+        assertArrayEquals(elements, actualContents);
+    }
+
+    private Object[] testToArrayParameters() {
+        return new Object[]{
+                new Object[]{new Integer[]{1}},
+                new Object[]{new Integer[]{1, 2, 3}},
+                new Object[]{new Integer[]{5, 6, 7, 8, 9, 10}}
+        };
+    }
+
+    @Test
     public void testHasNext() {
         // given
         MyLinkedList<String> myList = new MyLinkedList<>();
@@ -156,12 +202,24 @@ public class MyLinkedListTest {
     }
 
     @Test
+    public void testHasNextWithEmptyList() throws NoSuchElementException {
+        // given
+        MyLinkedList<String> myList = new MyLinkedList<>();
+        Iterator iterator = myList.iterator();
+
+        // when
+        exception.expect(NoSuchElementException.class);
+        iterator.next();
+    }
+
+    @Test
     public void testHasNextOnLastElement() {
         // given
         MyLinkedList<String> myList = new MyLinkedList<>();
         myList.add("One");
         myList.add("Two");
         Iterator iterator = myList.iterator();
+        iterator.next();
         iterator.next();
 
         // when
@@ -176,14 +234,13 @@ public class MyLinkedListTest {
         // given
         MyLinkedList<String> myList = new MyLinkedList<>();
         myList.add("One");
-        myList.add("Two");
         Iterator iterator = myList.iterator();
 
         // when
         String actualNextElement = (String) iterator.next();
 
         // then
-        assertEquals("Two", actualNextElement);
+        assertEquals("One", actualNextElement);
     }
 
     @Test
@@ -192,6 +249,7 @@ public class MyLinkedListTest {
         MyLinkedList<String> myList = new MyLinkedList<>();
         myList.add("One");
         Iterator iterator = myList.iterator();
+        iterator.next();
 
         // when
         exception.expect(NoSuchElementException.class);

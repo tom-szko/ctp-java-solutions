@@ -17,9 +17,7 @@ public class MyLinkedList<E> implements Iterable {
     }
 
     public void add(E element) {
-        if (element == null) {
-            throw new IllegalArgumentException("Null is not a valid element.");
-        }
+        isValidElement(element);
         Node<E> previous = lastNode;
         Node<E> newNode = new Node(element, previous, null);
         if (previous == null) {
@@ -33,32 +31,42 @@ public class MyLinkedList<E> implements Iterable {
     }
 
     public boolean remove(E element) {
-        Node<E> nodeToFind = firstNode;
-        for (int i = 0; i < size; i++, nodeToFind = nodeToFind.nextNode) {
-            if (nodeToFind.element == element) {
-                Node<E> previous = nodeToFind.previousNode;
-                Node<E> next = nodeToFind.nextNode;
-                if (previous == null) {
-                    firstNode = next;
-                } else {
-                    previous.nextNode = next;
-                }
-                if (next == null) {
-                    lastNode = previous;
-                } else {
-                    next.previousNode = previous;
-                }
-                size--;
-                return true;
+        isValidElement(element);
+        Node<E> found = find(element);
+        if (found != null) {
+            Node<E> previous = found.previousNode;
+            Node<E> next = found.nextNode;
+            if (previous == null) {
+                firstNode = next;
+            } else {
+                previous.nextNode = next;
             }
+            if (next == null) {
+                lastNode = previous;
+            } else {
+                next.previousNode = previous;
+            }
+            size--;
+            return true;
         }
         return false;
     }
 
-    public boolean contains(E element) {
+    private Node<E> find(E element) {
         Node<E> nodeToFind = firstNode;
         for (int i = 0; i < size; i++, nodeToFind = nodeToFind.nextNode) {
-            if (nodeToFind.element == element) {
+            if (nodeToFind.element.equals(element)) {
+                return nodeToFind;
+            }
+        }
+        return null;
+    }
+
+    public boolean contains(E element) {
+        isValidElement(element);
+        Iterator iterator = iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().equals(element)) {
                 return true;
             }
         }
@@ -66,42 +74,24 @@ public class MyLinkedList<E> implements Iterable {
     }
 
     public Object[] toArray() {
-        Node<E> currentNode = firstNode;
         Object[] elements = new Object[size];
-        for (int i = 0; i < size; i++) {
-            elements[i] = currentNode.element;
-            if (currentNode.nextNode != null) {
-                currentNode = currentNode.nextNode;
-            }
+        int elementIndex = 0;
+        Iterator iterator = iterator();
+        while (iterator.hasNext()) {
+            elements[elementIndex] = iterator.next();
+            elementIndex++;
         }
         return elements;
     }
 
     @Override
     public Iterator iterator() {
-        return new MyIterator();
+        return new LinkedListIterator();
     }
 
-    private class MyIterator implements Iterator {
-        private Node<E> currentNode;
-        private int index;
-
-        MyIterator() {
-            index = 0;
-            currentNode = firstNode;
-        }
-
-        public boolean hasNext() {
-            return (index < size - 1);
-        }
-
-        public E next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException("No such element!");
-            }
-            currentNode = currentNode.nextNode;
-            index++;
-            return currentNode.element;
+    private void isValidElement(E element) {
+        if (element == null) {
+            throw new IllegalArgumentException("Null as element is not allowed.");
         }
     }
 
@@ -114,6 +104,31 @@ public class MyLinkedList<E> implements Iterable {
             this.element = element;
             this.previousNode = previousNode;
             this.nextNode = nextNode;
+        }
+    }
+
+    private class LinkedListIterator implements Iterator {
+        private Node<E> following;
+        private Node<E> returned;
+        private int nextIndex;
+
+        LinkedListIterator() {
+            following = firstNode;
+            nextIndex = 0;
+        }
+
+        public boolean hasNext() {
+            return (nextIndex < size);
+        }
+
+        public E next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException("No such element!");
+            }
+            returned = following;
+            following = following.nextNode;
+            nextIndex++;
+            return returned.element;
         }
     }
 }
